@@ -1,16 +1,16 @@
 Entities
 Player
 Conference - plays in
-Position - is a
+Position/Wide Receiver - is a
 
 Attributes
-RAS Score
-Yards
-Touchdowns
-Breakout Age
-Dominator Rating
-Usage Third Down?
-YPR
+RAS Score - all Players
+Receiving Yards - Positions
+Receiving Touchdowns - Positions
+Breakout Age - Positions?
+Dominator Rating - Player
+Passing Usage Third Down? - Position
+YPR - Position
 
 
 Resources
