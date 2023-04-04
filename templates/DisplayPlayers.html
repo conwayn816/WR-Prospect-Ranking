@@ -1,0 +1,24 @@
+<!-- Displays all the current players we have in our database -->
+<!DOCTYPE html>
+<html>
+    <body>
+        <head>
+            <title>Player List</title>
+        </head>
+
+        <h1><b>Players:</b></h1>
+
+        <!--Table of our players goes here...-->
+
+        <table>
+           <ul>
+            {%for player in players%}
+            <li><p>{player.PlayerName}</p></li>
+
+            {% endfor %}
+           </ul>
+        </table>
+
+    </body>
+
+</html>

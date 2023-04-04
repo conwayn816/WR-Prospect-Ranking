@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+    <div style="text-align: center;"> <!--CENTER TEXT-->
+  <head>
+    <title>Add New Stats</title>
+  </head>
+
+  <body>
+    <h1><b>Add New Stats:</b></h1>
+
+    <h2><u>Team Info: </u></h2>    
+    <form> <!--user will enter the below to add a new player-->
+        <h3>Team Name:</h3>
+        <input type="text" id="TeamName" name="TeamName">
+
+        <h3>QB Rating: (MAX: 5.0)</h3> <!-- might have to change the max value from 5.0 -->
+        <input type="number" id="QBrating" name="QBrating" step="0.1" max="5.0">
+
+
+    <h2> <u>Conference Info: </u></h2>  
+
+        <h3>Conference Name:</h3>
+        <input type="text" id="ConferenceName" name="ConferenceName">
+
+        <h3>Conference Strength: (MAX: 5.0)</h3> 
+        <input type="number" id="ConferenceStrength" name="ConferenceStrength" step="0.1" max="5.0">
+
+
+    <h2><u>Player Info: </u></h2>  
+  
+        <h3>Player Name:</h3>
+        <input type="text" id="PlayerName" name="PlayerName">
+
+        <h3>Class:</h3>
+        <select>
+            <option value="Freshman">Freshman</option>
+            <option value="Sophomore">Sophomore</option>
+            <option value="Junior">Junior</option>
+            <option value="Senior">Senior</option>
+            <option value="Redshirt Freshman">Redshirt Freshman</option>
+          </select>
+          
+
+        <h3>RAS: (MAX: 10.0)</h3> 
+        <input type="number" id="RAS" name="RAS" step="0.1" max="10.0">
+    
+
+    <h2><u>Player Stats: </u></h2>  
+
+    <h3>Receiving TD's</h3> 
+    <input type="number" id="RecTD" name="RecTD">
+
+    <h3>3rd Down Usage</h3> 
+    <input type="number" id="3rdDown" name="3rdDown" step= "0.1">
+    
+    <h2><u>Advanced Player Stats: </u></h2> 
+
+    <h3>Team Yards: </h3> 
+    <input type="number" id="TeamYards" name="TeamYards" step= "0.1">
+
+    <h3>Receiving Yards: </h3> 
+    <input type="number" id="RecYards" name="RecYards" step= "0.1">
+
+    <h3>Dominator Rating: </h3> 
+    <input type="number" id="Dominator" name="Dominator" step= "0.1">  
+    
+    <h3>Breakout Age: </h3>
+    <input type = "number" id="Breakout" name = "Breakout">
+
+    <!--SUBMIT BUTTON-->
+    <br>
+    <input type="submit" value="Submit" style="font-size: 200%;">
+    </form> <!--END FORM-->
+
+  </body>
+
+    </div><!--END CENTER TEXT-->
+</html>
