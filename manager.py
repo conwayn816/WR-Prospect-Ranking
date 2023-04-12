@@ -20,20 +20,35 @@ def list():
    return render_template("DisplayPlayers.html",rows = rows)
 
 
-@app.route("/Add Stats")
+@app.route("/Add Stats", methods = ["POST", "GET"])
 def add():
     if request.method == 'POST':
       try:
-         nm = request.form['Name']
-         cla = request.form['Classes']
-         maj = request.form['Major']
-         gpa = request.form['GPA']
-         
+         #team info
+         TeamName = request.form['TeamName']
+         QBrating = request.form['QBrating']
+         #conference info
+         ConferenceName = request.form['ConferenceName']
+         ConferenceStrength = request.form['ConferenceStrength']
+         #player info
+         PlayerName = request.form['PlayerName']
+         PlayerClass = request.form['PlayerClass']
+         RAS = request.form["RAS"]
+         #player stats
+         RecTD = request.form["RecTD"]
+         ThirdDown= request.form["ThirdDown"]
+         TeamYards = request.form["TeamYards"]
+         RecYards = request.form["RecYards"]
+         Dominator = request.form["Dominator"]
+         Breakout = request.form["Breakout"]
+
+
          # connect to the database and aquire a "cursor"
          with mysql.connect("database.db") as con:
             cur = con.cursor()
             # insert the form values in the database
-            cur.execute("INSERT INTO students (Name,Classes,Major,GPA) VALUES (?,?,?,?)",(nm,cla,maj,gpa) )
+
+            cur.execute("INSERT INTO team (Name,Classes,Major,GPA) VALUES (?,?,?,?)",(nm,cla,maj,gpa) )
             
             con.commit()
             msg = "Record successfully added"
