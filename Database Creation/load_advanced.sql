@@ -1,0 +1,6 @@
+LOAD DATA LOCAL INFILE 'file path to advanced stats'
+INTO TABLE WR_Prospects.Advanced_Stats
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
