@@ -1,0 +1,6 @@
+LOAD DATA LOCAL INFILE 'path to career stats file'
+INTO TABLE WR_Prospects.Stats
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
