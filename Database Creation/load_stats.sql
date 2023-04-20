@@ -1,4 +1,4 @@
-LOAD DATA LOCAL INFILE 'path to career stats file'
+LOAD DATA LOCAL INFILE 'WR Career Stats.csv'
 INTO TABLE WR_Prospects.Stats
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
