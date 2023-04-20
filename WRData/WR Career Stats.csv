@@ -1,45 +1,44 @@
-﻿Name,Receiving Yards,Receptions,Yards Per Reception,Receiving Touchdowns
-Tutu Atwell,2303,139,16.6,21
-Dyami Brown,2306,123,18.7,21
-Amari Rodgers,2144,181,11.8,15
-Dez Fitzpatrick,2589,154,16.8,21
-Cornell Powell,1211,93,13,10
-Jalen Camp,786,46,17.1,5
-Dazz Newsome,2435,188,13,18
-Ja'Marr Chase,2093,107,19.6,23
-Jaylen Waddle,1999,106,18.9,17
-DeVonta Smith,3961,234,16.9,46
-Kadarius Toney,1590,120,13.3,12
-Elijah Moore,2441,189,12.9,16
-Terrace Marshall Jr.,1594,106,15,23
-Josh Palmer,1514,99,15.3,7
-Anthony Schwartz,1433,117,12.2,6
-Shi Smith,2204,174,12.7,13
-Racey McMath,522,33,15.8,4
-Seth Williams,2124,132,16.1,17
-Rashod Bateman,2395,147,16.3,19
-Rondale Moore,1915,178,10.8,14
-Nico Collins,1388,78,17.8,13
-Ihmir Smith-Marsette,1599,110,14.5,14
-Tylan Wallace,3434,205,16.7,26
-Amon-Ra St. Brown,2270,178,12.8,16
-Simi Fehoko,1146,62,18.5,9
-Frank Darby,1317,67,19.6,13
-Demetric Felton,958,99,9.7,8
-Jameson Williams,1838,94,19.6,18
-Treylon Burks,2399,146,16.4,18
-Wan'Dale Robinson,2248,195,11.5,10
-John Metchie III,2081,155,13.4,14
-George Pickens,1347,90,15,14
-Velus Jones Jr.,1434,120,12,11
-Tyquan Thornton,2242,143,15.7,19
-Erik Ezukanma,2165,138,15.7,15
-Michael Woods II,1648,118,14,12
-Garrett Wilson,2213,143,15.5,23
-Chris Olave,2702,175,15.4,35
-Jahan Dotson,2757,183,15.1,25
-David Bell,2946,232,12.7,21
-Jalen Nailor,1454,86,16.9,12
-Bo Melton,2011,164,12.3,11
-Drake London,2153,160,13.5,15
-Kyle Philips,1821,163,11.2,17
+Name,Receiving_Yards,Yards_Percentile,Receptions,Yards_Per_Reception,Receiving_Touchdowns
+Tutu Atwell,2303,0.55,139,16.6,21
+Dyami Brown,2306,0.71,123,18.7,21
+Amari Rodgers,2144,0.19,181,11.8,15
+Dez Fitzpatrick,2589,0.45,154,16.8,21
+Cornell Powell,1211,0.9,93,13,10
+Jalen Camp,786,0.1,46,17.1,5
+Dazz Newsome,2435,0.95,188,13,18
+Ja'Marr Chase,2093,0.83,107,19.6,23
+Jaylen Waddle,1999,0.05,106,18.9,17
+DeVonta Smith,3961,1,234,16.9,46
+Kadarius Toney,1590,0.88,120,13.3,12
+Elijah Moore,2441,0.57,189,12.9,16
+Terrace Marshall Jr.,1594,0.76,106,15,23
+Josh Palmer,1514,0.86,99,15.3,7
+Anthony Schwartz,1433,0.6,117,12.2,6
+Shi Smith,2204,0.12,174,12.7,13
+Racey McMath,522,0.64,33,15.8,4
+Seth Williams,2124,0.14,132,16.1,17
+Rashod Bateman,2395,0.33,147,16.3,19
+Rondale Moore,1915,0.93,178,10.8,14
+Nico Collins,1388,0.02,78,17.8,13
+Ihmir Smith-Marsette,1599,0.24,110,14.5,14
+Tylan Wallace,3434,0.5,205,16.7,26
+Amon-Ra St. Brown,2270,0.38,178,12.8,16
+Simi Fehoko,1146,0.43,62,18.5,9
+Frank Darby,1317,0.48,67,19.6,13
+Demetric Felton,958,0.26,99,9.7,8
+Jameson Williams,1838,0.29,94,19.6,18
+Treylon Burks,2399,0.36,146,16.4,18
+Wan'Dale Robinson,2248,0.17,195,11.5,10
+John Metchie III,2081,0,155,13.4,14
+George Pickens,1347,0.79,90,15,14
+Velus Jones Jr.,1434,0.4,120,12,11
+Tyquan Thornton,2242,0.52,143,15.7,19
+Erik Ezukanma,2165,0.62,138,15.7,15
+Michael Woods II,1648,0.07,118,14,12
+Garrett Wilson,2213,0.31,143,15.5,23
+Chris Olave,2702,0.81,175,15.4,35
+Jahan Dotson,2757,0.74,183,15.1,25
+David Bell,2946,0.98,232,12.7,21
+Jalen Nailor,1454,0.67,86,16.9,12
+Bo Melton,2011,0.21,164,12.3,11
+Drake London,2153,0.69,160,13.5,15
