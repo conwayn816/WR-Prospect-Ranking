@@ -24,10 +24,9 @@ cur = con.cursor()
 
 try:
                               #use your username and password here...
-   #cnx = mysql.connector.connect(user='Thomas', password='Percy24!',
-    #                          host='127.0.0.1',
-     #                         database='WR_Prospects')
-   cnx = mysql.connector.connect(host = "localhost", user = "Thomas", passwd = "Percy24!")
+   cnx = mysql.connector.connect(user='Thomas', password='Percy24!',
+                              host='127.0.0.1',
+                              database='WR_Prospects')
    cur = mysql.cursor()
 
 except mysql.connector.Error as err:
