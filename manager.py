@@ -7,36 +7,35 @@ from flask_mysqldb import MySQL
 import mysql.connector
 from mysql.connector import errorcode
 from sqlalchemy import create_engine
-
+from sqlalchemy import text
 # create a connection to the MySQL database
 app = Flask(__name__)
 user = 'root'
 password = 'Ap080602'
-host = "localhost'
+host = 'localhost'
 port = '3306'
 database = 'WR_Prospects'
 engine = create_engine(f'mysql://{user}:{password}@{host}:{port}/{database}')
 # test the connection
-conn = engine.connect()
-
+con = engine.connect()
 
 #DisplayPlayers.html (displays the list of players)
 @app.route("/")
 def list():
    
-   cur.execute("SELECT p.Name, p.College_Conference, c.Conference_Strength, p.College_Team, \
+   rows = con.execute(text("SELECT p.Name, p.Conference, c.Conference_Strength, p.Team, \
                p.Overall_Pick, p.Draft_Class, s.Receiving_Yards, s.Receptions, s.Yards_Per_Reception, \
                s.Receiving_Touchdowns, a.College_Dominator_Rating, a.Breakout_Age, a.College_Level_of_Competition, \
-               a.RAS_Score \
+               a.RAS_Score, p.Score \
                FROM WR_Prospects.Player p \
                JOIN WR_Prospects.Stats s ON p.Name = s.Name \
                JOIN WR_Prospects.Advanced_Stats a ON p.Name = a.Name \
-               JOIN WR_Prospects.Conferences c ON p.College_Conference = c.Conference_Name \
-               ORDER BY p.Name;")
+               JOIN WR_Prospects.Conferences c ON p.Conference = c.Conference_Name \
+               ORDER BY p.Name;")).fetchall()
    
    #send the returned table as a list of rows to the front end
-   rows = cur.fetchall()
-   return render_template("DisplayPlayers.html",rows = rows)
+   # rows = con.fetchall()
+   return render_template("DisplayPlayers.html",rows=rows)
 
 #add a new player to the database
 @app.route("/Add_Stats", methods = ["POST", "GET"])
