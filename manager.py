@@ -137,7 +137,15 @@ def results():
 @app.route("/single_player", methods = ["POST", "GET"])
 def single_player(Name):
 
-   query = "SELECT * FROM Player WHERE Name = ?"
+   query = "SELECT * \
+            FROM Player \
+            LEFT JOIN Stats ON Player.Name = Stats.Name \
+            LEFT JOIN Advanced_Stats ON Player.Name = Advanced_Stats.Name \
+            LEFT JOIN Conferences ON Player.College_Conference = Conferences.Conference_Name \
+            WHERE Player.Name LIKE '%s';"
+   
+   Name = ("%" + Name + "%")
+
    cur.execute(query, Name)
    result = cur.fetchone()
    return result
