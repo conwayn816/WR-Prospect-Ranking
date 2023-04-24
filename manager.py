@@ -6,45 +6,22 @@ from flask_mysqldb import MySQL
 #from wtforms import Form, StringField
 import mysql.connector
 from mysql.connector import errorcode
-'''
+from sqlalchemy import create_engine
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'Thomas'
-app.config['MYSQL_PASSWORD'] = 'Percy24!'
-app.config['MYSQL_DB'] = 'WR_Prospects'
- # connect to the database 
-con = mysql.connector.connect("WR_Prospects.db")
-con.row_factory = mysql.Row
-# aquire a cursor and excute the query
-cur = con.cursor()
-
-
-
-'''
-
-try:
-                              #use your username and password here...
-   cnx = mysql.connector.connect(user='Thomas', password='Percy24!',
-                              host='127.0.0.1',
-                              database='WR_Prospects')
-   cur = mysql.cursor()
-
-except mysql.connector.Error as err:
-  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-    print("Something is wrong with your user name or password")
-  elif err.errno == errorcode.ER_BAD_DB_ERROR:
-    print("Database does not exist")
-  else:
-    print(err)
-else:
-  cnx.close()
-
+# create a connection to the MySQL database
 app = Flask(__name__)
-mysql = MySQL(app)
+user = 'root'
+password = 'Ap080602'
+host = "localhost'
+port = '3306'
+database = 'WR_Prospects'
+engine = create_engine(f'mysql://{user}:{password}@{host}:{port}/{database}')
+# test the connection
+conn = engine.connect()
 
 
 #DisplayPlayers.html (displays the list of players)
-@app.route("/Player List")
+@app.route("/")
 def list():
    
    cur.execute("SELECT p.Name, p.College_Conference, c.Conference_Strength, p.College_Team, \
