@@ -107,35 +107,16 @@ def add():
 def search():
 
    Name = request.form['search_input']
-   player_data = single_player(Name) #get info about the player we just searched
+   player_data = display_single_player(Name) #get info about the player we just searched
    
    if player_data:
       return render_template('search.html', player_found=True, Name = Name)
    else:
       return render_template('search.html')
 
-
-#returns the results of the player search
-@app.route("/results", methods = ["POST", "GET"])
-def results():
-
-   # get the search input from the form
-   search_input = request.form["search_input"]
-    
-   query = "SELECT * FROM Player WHERE Name LIKE %s"
-   params = ("%" + search_input + "%",) #add the %% onto the string so we can wildcard search
-
-   # execute the query with the parameterized search input
-   cur.execute(query, params)
-    
-   # retrieve the results from the cursor object
-   search_results = cur.fetchall()
-
-   return render_template("searchResults.html", results=search_results)
-
 #displays a single player when he is searched for 
-@app.route("/single_player", methods = ["POST", "GET"])
-def single_player(Name):
+@app.route("/display_single_player", methods = ["POST", "GET"])
+def display_single_player(Name):
 
    query = "SELECT * FROM Player WHERE Name = ?"
    cur.execute(query, Name)
