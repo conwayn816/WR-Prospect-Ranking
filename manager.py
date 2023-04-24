@@ -70,19 +70,22 @@ def add():
          Score = request.form["Score"] #advanced function 
          #Stats
          Receiving_Yards = request.form["Receiving_Yards"]
-         Yards_Percentile = request.form["Yards_Percentile"]
+         #Yards_Percentile = request.form["Yards_Percentile"]
          Receptions = request.form["Receptions"]
          Yards_Per_Reception = request.form["Yards_Per_Reception"]
          Receiving_Touchdowns = request.form["Receiving_Touchdowns"]
          #Advanced_Stats
          College_Dominator_Rating = request.form["College_Dominator_Rating"]
-         DOM_Percentile = request.form["DOM_Percentile"]
+         #DOM_Percentile = request.form["DOM_Percentile"]
          Breakout_Age = request.form["Breakout_Age"]
-         BA_Percentile = request.form["BA_Percentile"]
+         #BA_Percentile = request.form["BA_Percentile"]
          College_Level_of_Competition = request.form["College_Level_of_Competition"]
-         LOC_Percentile = request.form["LOC_Percentile"]
+         #LOC_Percentile = request.form["LOC_Percentile"]
          RAS_Score = request.form["RAS_Score"]
-         RAS_Percentile = request.form["RAS_Percentile"]
+         #RAS_Percentile = request.form["RAS_Percentile"]
+
+         player_query = "INSERT INTO Player(Name, Conference) VALUES(%s, %s)"
+         cur.execute(player_query, Name, Conference)
 
          # connect to the database and aquire a "cursor"
          with mysql.connect("WR_Stats.db") as con:
