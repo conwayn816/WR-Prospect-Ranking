@@ -1,31 +1,53 @@
 from flask import Flask, render_template, request
 import _mysql_connector as myconn
 import mysql 
-
 from flask import Flask, render_template, request
 from flask_mysqldb import MySQL
-from wtforms import Form, StringField
+#from wtforms import Form, StringField
+import mysql.connector
+from mysql.connector import errorcode
+'''
 
-
-app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'password'
-app.config['MYSQL_DB'] = 'database_name'
-mysql = MySQL(app)
-
+app.config['MYSQL_USER'] = 'Thomas'
+app.config['MYSQL_PASSWORD'] = 'Percy24!'
+app.config['MYSQL_DB'] = 'WR_Prospects'
  # connect to the database 
-con = mysql.connect("database.db")
+con = mysql.connector.connect("WR_Prospects.db")
 con.row_factory = mysql.Row
-
 # aquire a cursor and excute the query
 cur = con.cursor()
+
+
+
+'''
+
+try:
+                              #use your username and password here...
+   #cnx = mysql.connector.connect(user='Thomas', password='Percy24!',
+    #                          host='127.0.0.1',
+     #                         database='WR_Prospects')
+   cnx = mysql.connector.connect(host = "localhost", user = "Thomas", passwd = "Percy24!")
+   cur = mysql.cursor()
+
+except mysql.connector.Error as err:
+  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+    print("Something is wrong with your user name or password")
+  elif err.errno == errorcode.ER_BAD_DB_ERROR:
+    print("Database does not exist")
+  else:
+    print(err)
+else:
+  cnx.close()
+
+app = Flask(__name__)
+mysql = MySQL(app)
 
 #DisplayPlayers.html (displays the list of players)
 @app.route("/Player List")
 def list():
    
-   cur.execute("select * from players")
+   cur.execute("SELECT * FROM Player")
    
    #send the returned table as a list of rows to the front end
    rows = cur.fetchall()
@@ -83,21 +105,35 @@ def search():
 def results():
 
    # get the search input from the form
-    search_input = request.form["search_input"]
+   search_input = request.form["search_input"]
     
-    query = "SELECT * FROM players WHERE name LIKE %s"
-    params = ("%" + search_input + "%",) #add the %% onto the string so we can wildcard search
+   query = "SELECT * FROM Player WHERE name LIKE %s"
+   params = ("%" + search_input + "%",) #add the %% onto the string so we can wildcard search
 
-    # execute the query with the parameterized search input
-    cur.execute(query, params)
+   # execute the query with the parameterized search input
+   cur.execute(query, params)
     
-    # retrieve the results from the cursor object
-    search_results = cursor.fetchall()
+   # retrieve the results from the cursor object
+   search_results = cur.fetchall()
 
-    return render_template("searchResults.html", results=search_results)
+   return render_template("searchResults.html", results=search_results)
 
-   
+@app.route("/delete", methods = ["POST", "GET"])
+def delete():
 
+   delete_search = request.form["delete_search"]
+
+   query = "DELETE FROM Player WHERE name LIKE %s"
+   params = params = ("%" + delete_search + "%",)  
+   cur.execute(query, params)
+
+   return render_template("DisplayPlayers.html")
+
+
+@app.route("/update", methods = ["POST", "GET"])
+def update():
+
+   query = "UPDATE Player "
 
 #main
 if __name__ == "__main__":
