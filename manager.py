@@ -43,6 +43,7 @@ else:
 app = Flask(__name__)
 mysql = MySQL(app)
 
+
 #DisplayPlayers.html (displays the list of players)
 @app.route("/Player List")
 def list():
@@ -54,10 +55,9 @@ def list():
    return render_template("DisplayPlayers.html",rows = rows)
 
 #add a new player to the database
-@app.route("/Add Stats", methods = ["POST", "GET"])
+@app.route("/Add_Stats", methods = ["POST", "GET"])
 def add():
-    if request.method == 'POST':
-      try:
+   if request.method == 'POST':
          #Conference
          Conference_Name = request.form['Conference_Name']
          Conference_Strength = request.form['Conference_Strength']
@@ -85,24 +85,14 @@ def add():
          #RAS_Percentile = request.form["RAS_Percentile"]
 
          player_query = "INSERT INTO Player(Name, Conference) VALUES(%s, %s)"
+         stats_query = "INSERT INTO Stats() VALUES()"
+
          cur.execute(player_query, Name, Conference)
+         
+         return "Player added successfully!"
+   else:
+      return render_template('AddStats.html')
 
-         # connect to the database and aquire a "cursor"
-         with mysql.connect("WR_Stats.db") as con:
-            cur = con.cursor()
-            # insert the form values in the database
-
-            cur.execute("INSERT INTO Player () VALUES() ")
-            
-            con.commit()
-            msg = "Record successfully added"
-      except:
-         con.rollback()
-         msg = "error in insert operation"
-      
-      finally:
-         return render_template("result.html",msg = msg)
-         con.close()
 
 #search for a player in the database
 @app.route("/search", methods = ["POST", "GET"])
