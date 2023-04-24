@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import _mysql_connector as myconn
 import mysql 
 from flask import Flask, render_template, request
@@ -108,7 +108,14 @@ def add():
 @app.route("/search", methods = ["POST", "GET"])
 def search():
 
-   return render_template("search.html")
+   Name = request.form['search_input']
+   player_data = single_player(Name) #get info about the player we just searched
+   
+   if player_data:
+      return render_template('search.html', player_found=True, Name = Name)
+   else:
+      return render_template('search.html')
+
 
 #returns the results of the player search
 @app.route("/results", methods = ["POST", "GET"])
@@ -128,6 +135,15 @@ def results():
 
    return render_template("searchResults.html", results=search_results)
 
+#displays a single player when he is searched for 
+@app.route("/single_player", methods = ["POST", "GET"])
+def single_player(Name):
+
+   query = "SELECT * FROM Player WHERE Name = ?"
+   cur.execute(query, Name)
+   result = cur.fetchone()
+   return result
+
 @app.route("/delete", methods = ["POST", "GET"])
 def delete():
 
@@ -140,10 +156,38 @@ def delete():
    return render_template("DisplayPlayers.html")
 
 
-@app.route("/update", methods = ["POST", "GET"])
-def update():
+@app.route('/name_check', methods=['POST'])
+def name_check():
+    # retrieve the player name from the search form
+    player_name = request.form['player_name']
+    
+    # check if the player exists in the database
+    cur.execute("SELECT * FROM Player WHERE Name = %s", (player_name,))
+    player = cur.fetchone()
+    if not player:
+        return render_template('search.html', message='Player not found.')
+    
+    # pass the player's data to the update form
+    return redirect('/update_player/{}'.format(player['Name']))
 
-   query = "UPDATE Player SET ___ = "" WHERE Name LIKE %s"
+@app.route("/update_player", methods = ["POST", "GET"])
+def update_player():
+
+   # Get the form data
+   Name = request.form['Name']
+   Draft_Class = request.form['Draft_Class']
+   Conference = request.form['Conference']
+   Team = request.form['Team']
+   Overall_Pick = request.form['Overall_Pick']
+
+   # Update the database
+   cur.execute('UPDATE Player SET Draft_Class=?, Conference=?, Team=?, Overall_Pick=? WHERE Name =?',
+               (Draft_Class, Conference, Team, Overall_Pick, Name))
+  
+
+   # Redirect back to the player page
+   return redirect(url_for('DisplayPlayers.html', Name = Name))
+
 
 
 #main

@@ -1,6 +1,3 @@
-<!--This file is the search form, can search based on first name as of now-->
-
-
 <!DOCTYPE html>
 <html>
     <body>
@@ -13,6 +10,13 @@
             <input type="text" name="search_input" id="search_input">
             <input type="submit" value="Search">
         </form>
-      
+
+        {% if player_found %}
+            <h2><u>Update Player Info:</u></h2>
+            <form action="/update_player/{{ Name }}" method="POST">
+                <!-- Include all input fields for updating player info -->
+            </form>
+        {% endif %}
+
     </body>
 </html>
