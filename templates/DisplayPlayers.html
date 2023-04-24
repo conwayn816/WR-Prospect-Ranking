@@ -15,6 +15,14 @@
 </head>
 <body>
   <h1>Player List</h1>
+
+  <!--Buttons-->
+  <div>
+    <a href="/Add_Stats"><button>Add New Player</button></a>
+    <a href="/delete"><button>Delete Player</button></a>
+    <a href="/update_player"><button>Update a Player</button></a>
+  </div>
+  <!--START OF TABLE-->
   <table>
     <tr>
       <th>Name</th>
@@ -32,7 +40,7 @@
       <th>College Level of Competition</th>
       <th>RAS Score</th>
     </tr>
-    {% for player in player_data %}
+    {% for player in rows %}
     <tr>
       <td>{{ player[0] }}</td>
       <td>{{ player[1] }}</td>
