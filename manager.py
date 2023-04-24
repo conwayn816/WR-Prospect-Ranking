@@ -12,7 +12,7 @@ from sqlalchemy import create_engine
 app = Flask(__name__)
 user = 'root'
 password = 'Ap080602'
-host = "localhost'
+host = 'localhost'
 port = '3306'
 database = 'WR_Prospects'
 engine = create_engine(f'mysql://{user}:{password}@{host}:{port}/{database}')
