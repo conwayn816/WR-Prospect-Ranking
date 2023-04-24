@@ -96,7 +96,7 @@ def add():
          stats_query = "INSERT INTO Stats() VALUES()"
 
          cur.execute(player_query, Name, Conference)
-         
+
          return "Player added successfully!"
    else:
       return render_template('AddStats.html')
@@ -142,18 +142,6 @@ def single_player(Name):
    result = cur.fetchone()
    return result
 
-@app.route("/delete", methods = ["POST", "GET"])
-def delete():
-
-   delete_search = request.form["delete_search"]
-
-   query = "DELETE FROM Player WHERE Name LIKE %s"
-   params = params = ("%" + delete_search + "%",)  
-   cur.execute(query, params)
-
-   return render_template("DisplayPlayers.html")
-
-
 @app.route('/name_check', methods=['POST'])
 def name_check():
     # retrieve the player name from the search form
@@ -167,6 +155,17 @@ def name_check():
     
     # pass the player's data to the update form
     return redirect('/update_player/{}'.format(player['Name']))
+
+@app.route("/delete", methods = ["POST", "GET"])
+def delete():
+
+   delete_search = request.form["delete_search"]
+
+   query = "DELETE FROM Player WHERE Name LIKE %s"
+   params = params = ("%" + delete_search + "%",)  
+   cur.execute(query, params)
+
+   return render_template("DisplayPlayers.html")
 
 @app.route("/update_player", methods = ["POST", "GET"])
 def update_player():
