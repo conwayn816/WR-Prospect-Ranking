@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html>
+    <body>
+        <head>
+            <title>Update</title>
+        </head>
+
+        <h1>Update info about a Player</h1>
+        <form action="/search" method="POST">
+            <label for="player_search">Player Name:</label>
+            <input type="text" name="player_search" id="player_search">
+
+        <!--below is where the player's info can be updated-->
+        <h2><u>Player Info: </u></h2>  
+  
+        <h3>Class:</h3>
+        <select>
+            <option value="Freshman">Freshman</option>
+            <option value="Sophomore">Sophomore</option>
+            <option value="Junior">Junior</option>
+            <option value="Senior">Senior</option>
+            <option value="Redshirt Freshman">Redshirt Freshman</option>
+          </select>
+          
+
+        <h3>RAS: (MAX: 10.0)</h3> 
+        <input type="number" id="RAS" name="RAS" step="0.1" max="10.0">
+    
+
+        <h2><u>Player Stats: </u></h2>  
+
+        <h3>Receiving TD's</h3> 
+        <input type="number" id="RecTD" name="RecTD">
+        
+        <h2><u>Advanced Player Stats: </u></h2> 
+
+        <h3>Team Yards: </h3> 
+        <input type="number" id="TeamYards" name="TeamYards" step= "0.1">
+
+        <h3>Receiving Yards: </h3> 
+        <input type="number" id="RecYards" name="RecYards" step= "0.1">
+
+        <h3>Dominator Rating: </h3> 
+        <input type="number" id="Dominator" name="Dominator" step= "0.1">  
+        
+        <h3>Breakout Age: </h3>
+        <input type = "number" id="Breakout" name = "Breakout">
+
+            <input type="submit" value="Search">
+        </form>
+      
+    </body>
+</html>
