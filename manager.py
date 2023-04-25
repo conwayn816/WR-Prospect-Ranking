@@ -84,17 +84,7 @@ def search():
    con = engine.connect()
    if request.method == "POST":
       session['Name'] = request.form['Name'] + '%'
-      
-
-      '''
-      query = "SELECT * \
-            FROM Player \
-            LEFT JOIN Stats ON Player.Name = Stats.Name \
-            LEFT JOIN Advanced_Stats ON Player.Name = Advanced_Stats.Name \
-            LEFT JOIN Conferences ON Player.Conference = Conferences.Conference_Name \
-            WHERE Player.Name LIKE ':Name';"
-      '''
-      #thomas attempt without wildcard
+   
 
       player_list = session.get('player_list', [])
 
@@ -113,25 +103,6 @@ def search():
       return render_template("/searchResults.html", rows = rows, player_list = player_list)
    else:
       return render_template('search.html')
-'''
-#displays a single player when he is searched for 
-@app.route("/display_single_player", methods = ["POST", "GET"])
-def display_single_player(Name):
-
-   rows = "SELECT * \
-            FROM Player \
-            LEFT JOIN Stats ON Player.Name = Stats.Name \
-            LEFT JOIN Advanced_Stats ON Player.Name = Advanced_Stats.Name \
-            LEFT JOIN Conferences ON Player.Conference = Conferences.Conference_Name \
-            WHERE Player.Name LIKE '%s';"
-
-
-   #with engine.connect() as con:
-    #    result = con.execute(rows, name=f"%{Name}%").fetchall()
-
-   return render_template("searchResults.html",rows=rows)
-
-'''
 
 @app.route("/delete", methods = ["POST", "GET"])
 def delete():
@@ -150,23 +121,29 @@ def delete():
    else:
       return render_template("delete.html")
 
-@app.route("/update_player", methods = ["POST", "GET"])
+@app.route("/update", methods = ["POST", "GET"])
 def update_player():
    con = engine.connect()
-   # Get the form data
-   Name = request.form['Name']
-   Draft_Class = request.form['Draft_Class']
-   Conference = request.form['Conference']
-   Team = request.form['Team']
-   Overall_Pick = request.form['Overall_Pick']
+   if request.method == "POST":
+      # Get the form data
+      session['Name'] = request.form['Name']
+      session['Draft_Class'] = request.form['Draft_Class']
+      session['Conference'] = request.form['Conference']
+      session['Team'] = request.form['Team']
+      session['Overall_Pick'] = request.form['Overall_Pick']
 
-   # Update the database
-   con.execute('UPDATE Player SET Draft_Class=?, Conference=?, Team=?, Overall_Pick=? WHERE Name =?',
-               (Draft_Class, Conference, Team, Overall_Pick, Name))
-  
-   con.close()
-   # Redirect back to the player page
-   return redirect(url_for('DisplayPlayers.html', Name = Name))
+
+      update_query = 'UPDATE Player SET Draft_Class=:Draft_Class, Conference=:Conference, \
+                  Team=:Team, Overall_Pick=:Overall_Pick WHERE Name =:Name'
+               
+      # Update the database
+      con.execute(text(update_query), session)
+      con.commit()
+      con.close()
+      # Redirect back to the player page
+      return redirect('/')
+   else: 
+      return render_template("update.html")
 
 
 
