@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import _mysql_connector as myconn
 import mysql 
 from flask import Flask, render_template, request
@@ -8,6 +8,8 @@ import mysql.connector
 from mysql.connector import errorcode
 from sqlalchemy import create_engine
 from sqlalchemy import text
+
+from sqlalchemy.orm import sessionmaker
 # create a connection to the MySQL database
 app = Flask(__name__)
 user = 'root'
@@ -18,7 +20,7 @@ database = 'WR_Prospects'
 engine = create_engine(f'mysql://{user}:{password}@{host}:{port}/{database}')
 # test the connection
 con = engine.connect()
-
+app.secret_key = 'my_secret_key'
 #DisplayPlayers.html (displays the list of players)
 @app.route("/")
 def list():
@@ -38,48 +40,54 @@ def list():
    return render_template("DisplayPlayers.html",rows=rows)
 
 #add a new player to the database
-@app.route("/Add_Stats", methods = ["POST", "GET"])
+@app.route("/Add_Stats", methods=["POST", "GET"])
 def add():
-   if request.method == 'POST':
-         #Conference
-         #Player
-         Name = request.form['Name']
-         Conference = request.form["Conference"]
-         Team = request.form["Team"]
-         Overall_Pick = request.form["Overall_Pick"]
-         Draft_Class = request.form['Draft_Class']
-         #Stats
-         Receiving_Yards = request.form["Receiving_Yards"]
-         #Yards_Percentile = request.form["Yards_Percentile"]
-         Receptions = request.form["Receptions"]
-         Yards_Per_Reception = request.form["Yards_Per_Reception"]
-         Receiving_Touchdowns = request.form["Receiving_Touchdowns"]
-         #Advanced_Stats
-         College_Dominator_Rating = request.form["College_Dominator_Rating"]
-         #DOM_Percentile = request.form["DOM_Percentile"]
-         Breakout_Age = request.form["Breakout_Age"]
-         #BA_Percentile = request.form["BA_Percentile"]
-         College_Level_of_Competition = request.form["College_Level_of_Competition"]
-         #LOC_Percentile = request.form["LOC_Percentile"]
-         RAS_Score = request.form["RAS_Score"]
-         #RAS_Percentile = request.form["RAS_Percentile"]
+   if request.method == "POST":
+      '''
+      Name = request.form["Name"]
+      Conference = request.form["Conference"]
+      Team = request.form["Team"]
+      Overall_Pick = request.form["Overall_Pick"]
+      Draft_Class = request.form["Draft_Class"]
+      Receiving_Yards = request.form["Receiving_Yards"]
+      Receptions = request.form["Receptions"]
+      Yards_Per_Reception = request.form["Yards_Per_Reception"]
+      Receiving_Touchdowns = request.form["Receiving_Touchdowns"]
+      College_Dominator_Rating = request.form["College_Dominator_Rating"]
+      Breakout_Age = request.form["Breakout_Age"]
+      College_Level_of_Competition = request.form["College_Level_of_Competition"]
+      RAS_Score = request.form["RAS_Score"]
+      '''
+        
+      session['Name'] = request.form["Name"]
+      session['Conference'] = request.form["Conference"]
+      session['Team'] = request.form["Team"]
+      session['Overall_Pick'] = request.form["Overall_Pick"]
+      session['Draft_Class'] = request.form["Draft_Class"]
+      session['Receiving_Yards'] = request.form["Receiving_Yards"]
+      session['Receptions'] = request.form["Receptions"]
+      session['Yards_Per_Reception'] = request.form["Yards_Per_Reception"]
+      session['Receiving_Touchdowns'] = request.form["Receiving_Touchdowns"]
+      session['College_Dominator_Rating'] = request.form["College_Dominator_Rating"]
+      session['Breakout_Age'] = request.form["Breakout_Age"]
+      session['College_Level_of_Competition'] = request.form["College_Level_of_Competition"]
+      session['RAS_Score'] = request.form["RAS_Score"]
 
-         player_query = "INSERT INTO Player(Name, Conference, Team, Overall_Pick, Draft_Class) VALUES(:Name, :Conference, :Team, :Overall_Pick, :Draft_Class)"
-         stats_query = "INSERT INTO Stats(Name, Receiving_Yards, Receptions, Yards_Per_Reception, Receiving_Touchdowns) VALUES(:Name, :Receiving_Yards, :Receptions, :Yards_Per_Reception, :Receiving_Touchdowns)"
-         advanced_query = "INSERT INTO Advanced_Stats(Name, College_Dominator_Rating, Breakout_Age, College_Level_of_Competition, RAS_Score) VALUES(:Name, :College_Dominator_Rating, :Breakout_Age, :College_Level_of_Competition, :RAS_Score)"
+      player_query = "INSERT INTO Player(Name, Conference, Team, Overall_Pick, Draft_Class) VALUES(:Name, :Conference, :Team, :Overall_Pick, :Draft_Class)"
+      stats_query = "INSERT INTO Stats(Name, Receiving_Yards, Receptions, Yards_Per_Reception, Receiving_Touchdowns) VALUES(:Name, :Receiving_Yards, :Receptions, :Yards_Per_Reception, :Receiving_Touchdowns)"
+      advanced_query = "INSERT INTO Advanced_Stats(Name, College_Dominator_Rating, Breakout_Age, College_Level_of_Competition, RAS_Score) VALUES(:Name, :College_Dominator_Rating, :Breakout_Age, :College_Level_of_Competition, :RAS_Score)"
 
 
-         with engine.connect() as con:
-            con.execute(text(player_query), {"Name": Name, "Conference": Conference, "Team": Team, "Overall_Pick": Overall_Pick, "Draft_Class": Draft_Class})
-            con.execute(text(stats_query), {"Name": Name, "Receiving_Yards": Receiving_Yards, "Receptions": Receptions, "Yards_Per_Reception": Yards_Per_Reception, "Receiving_Touchdowns": Receiving_Touchdowns})
-            con.execute(text(advanced_query), {"Name": Name, "College_Dominator_Rating": College_Dominator_Rating, "Breakout_Age": Breakout_Age, "College_Level_of_Competition": College_Level_of_Competition, "RAS_Score": RAS_Score})
+      with engine.connect() as con:
+         con.execute(text(player_query), session)
+         con.execute(text(stats_query), session)
+         con.execute(text(advanced_query), session)
 
-
-         return "Player added successfully!"
+      return "Player added successfully!"
    else:
-      return render_template('AddStats.html')
+      return render_template("AddStats.html")
 
-
+      
 #search for a player in the database
 @app.route("/search", methods = ["POST", "GET"])
 def search():
