@@ -91,7 +91,7 @@ def add():
       return render_template("AddStats.html")
 
    
-      
+'''      
 #search for a player in the database
 @app.route("/search", methods = ["POST", "GET"])
 def search():
@@ -112,7 +112,7 @@ def search():
 
    else:
       return render_template('search.html')
-
+'''
 #displays a single player when he is searched for 
 @app.route("/display_single_player", methods = ["POST", "GET"])
 def display_single_player(Name):
@@ -134,18 +134,24 @@ def display_single_player(Name):
 
 @app.route("/delete", methods = ["POST", "GET"])
 def delete():
+   con = engine.connect()
 
-   delete_search = request.form["delete_search"]
+   if request.method == "POST":
+      session['Name'] = request.form["Name"]
 
-   query = "DELETE FROM Player WHERE Name LIKE %s"
-   params = params = ("%" + delete_search + "%",)  
-   con.execute(query, params)
-
-   return render_template("DisplayPlayers.html")
+      query = "DELETE FROM Player WHERE Name = :Name"
+       
+      with engine.connect() as con:
+         con.execute(text(query),session)
+         con.commit()
+      con.close()
+      return redirect("/")
+   else:
+      return render_template("delete.html")
 
 @app.route("/update_player", methods = ["POST", "GET"])
 def update_player():
-
+   con = engine.connect()
    # Get the form data
    Name = request.form['Name']
    Draft_Class = request.form['Draft_Class']
@@ -157,7 +163,7 @@ def update_player():
    con.execute('UPDATE Player SET Draft_Class=?, Conference=?, Team=?, Overall_Pick=? WHERE Name =?',
                (Draft_Class, Conference, Team, Overall_Pick, Name))
   
-
+   con.close()
    # Redirect back to the player page
    return redirect(url_for('DisplayPlayers.html', Name = Name))
 
