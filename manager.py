@@ -101,8 +101,24 @@ def search():
    else:
       return render_template('search.html')
 
+#displays a single player when he is searched for 
+@app.route("/display_single_player", methods = ["POST", "GET"])
+def display_single_player(Name):
+
+   rows = "SELECT * \
+            FROM Player \
+            LEFT JOIN Stats ON Player.Name = Stats.Name \
+            LEFT JOIN Advanced_Stats ON Player.Name = Advanced_Stats.Name \
+            LEFT JOIN Conferences ON Player.Conference = Conferences.Conference_Name \
+            WHERE Player.Name LIKE '%s';"
 
 
+   #with engine.connect() as con:
+    #    result = con.execute(rows, name=f"%{Name}%").fetchall()
+
+   return render_template("searchResults.html",rows=rows)
+
+''''''
 
 @app.route("/delete", methods = ["POST", "GET"])
 def delete():
