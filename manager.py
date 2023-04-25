@@ -91,25 +91,42 @@ def add():
       return render_template("AddStats.html")
 
    
-'''      
+      
 #search for a player in the database
 @app.route("/search", methods = ["POST", "GET"])
 def search():
-   if request.method == "POST":
-      Name = request.form["search_input"]
-      #player_data = display_single_player(Name) #get info about the player we just searched
 
-      #testing something here
-      rows = "SELECT * \
+   con = engine.connect()
+   if request.method == "POST":
+      Name = request.form["Name"]
+      session['Name'] = Name
+      # session['Name'] = request.form['Name']
+      
+      '''
+      query = "SELECT * \
             FROM Player \
             LEFT JOIN Stats ON Player.Name = Stats.Name \
             LEFT JOIN Advanced_Stats ON Player.Name = Advanced_Stats.Name \
             LEFT JOIN Conferences ON Player.Conference = Conferences.Conference_Name \
-            WHERE Player.Name LIKE '%s';"
-   
-      
-      return render_template('search.html', player_found=True, Name = Name, rows = rows)
+            WHERE Player.Name LIKE ':Name';"
+      '''
+      #thomas attempt without wildcard
 
+      player_list = session.get('player_list', [])
+
+      rows = con.execute(text("SELECT * \
+            FROM Player \
+            LEFT JOIN Stats ON Player.Name = Stats.Name \
+            LEFT JOIN Advanced_Stats ON Player.Name = Advanced_Stats.Name \
+            LEFT JOIN Conferences ON Player.Conference = Conferences.Conference_Name \
+            WHERE Player.Name = :Name")).fetchall()
+      '''
+      with engine.connect() as con:
+         results = con.execute(text(query), session).fetchall()
+         con.commit()
+      '''
+      con.close()
+      return render_template("/searchResults.html", Name=Name, rows = rows, player_list = player_list)
    else:
       return render_template('search.html')
 '''
@@ -130,7 +147,7 @@ def display_single_player(Name):
 
    return render_template("searchResults.html",rows=rows)
 
-''''''
+'''
 
 @app.route("/delete", methods = ["POST", "GET"])
 def delete():
