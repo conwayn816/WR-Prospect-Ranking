@@ -25,6 +25,75 @@ app.secret_key = 'my_secret_key'
 @app.route("/")
 def list():
    con = engine.connect()
+
+   con.execute(text('UPDATE WR_Prospects.Advanced_Stats AS a \
+INNER JOIN (\
+    SELECT Name, College_Dominator_Rating, \
+           PERCENT_RANK() OVER (ORDER BY College_Dominator_Rating) AS DOM_Percentile \
+    FROM WR_Prospects.Advanced_Stats \
+    WHERE College_Dominator_Rating IS NOT NULL \
+) AS b ON a.Name = b.Name \
+SET a.DOM_Percentile = b.DOM_Percentile \
+WHERE a.College_Dominator_Rating IS NOT NULL; \
+ \
+UPDATE WR_Prospects.Advanced_Stats AS a  \
+INNER JOIN ( \
+    SELECT Name, College_Level_of_Competition, \
+           PERCENT_RANK() OVER (ORDER BY College_Level_of_Competition) AS LOC_Percentile \
+    FROM WR_Prospects.Advanced_Stats \
+    WHERE College_Level_of_Competition IS NOT NULL \
+) AS b ON a.Name = b.Name \
+SET a.LOC_Percentile = b.LOC_Percentile \
+WHERE a.College_Level_of_Competition IS NOT NULL; \
+ \
+UPDATE WR_Prospects.Advanced_Stats AS a \
+INNER JOIN ( \
+    SELECT Name, RAS_Score, \
+           PERCENT_RANK() OVER (ORDER BY RAS_Score) AS RAS_Percentile \
+    FROM WR_Prospects.Advanced_Stats \
+    WHERE RAS_Score > 0 \
+) AS b ON a.Name = b.Name \
+SET a.RAS_Percentile = b.RAS_Percentile \
+WHERE a.RAS_Score > 0;'))
+   con.execute(text('UPDATE WR_Prospects.Advanced_Stats AS a \
+INNER JOIN ( \
+    SELECT Name, Breakout_Age, \
+           1 - PERCENT_RANK() OVER (ORDER BY Breakout_Age) AS BA_Percentile \
+    FROM WR_Prospects.Advanced_Stats \
+    WHERE Breakout_Age IS NOT NULL \
+) AS b ON a.Name = b.Name \
+SET a.BA_Percentile = b.BA_Percentile \
+WHERE a.Breakout_Age IS NOT NULL; \
+'))   
+   con.execute(text('UPDATE WR_Prospects.Stats AS a \
+INNER JOIN ( \
+    SELECT Name, Receiving_Yards, \
+           PERCENT_RANK() OVER (ORDER BY Receiving_Yards) AS Yards_Percentile \
+    FROM WR_Prospects.Stats \
+) AS b ON a.Name = b.Name \
+SET a.Yards_Percentile = b.Yards_Percentile'))
+
+   con.execute(text('UPDATE WR_Prospects.Player p \
+JOIN ( \
+    SELECT p.Name,  \
+           SUM(s.Yards_Percentile + a.DOM_Percentile + (a.LOC_Percentile * 3) \
+               + (c.Conference_Strength * 1.5) + (s.Receiving_Touchdowns * 0.0132) + a.BA_Percentile \
+               + (CASE WHEN a.RAS_Score IS NULL THEN 0 ELSE a.RAS_Percentile * 2 END)) AS Score \
+    FROM WR_Prospects.Player p \
+    JOIN WR_Prospects.Stats s ON p.Name = s.Name \
+    JOIN WR_Prospects.Advanced_Stats a ON p.Name = a.Name \
+    JOIN WR_Prospects.Conferences c ON p.Conference = c.Conference_Name \
+    GROUP BY p.Name \
+) AS t ON p.Name = t.Name \
+SET p.Score = t.Score; \
+'))
+
+   con.commit()
+
+
+
+
+
    player_list = session.get('player_list', [])
    rows = con.execute(text("SELECT p.Name, p.Conference, c.Conference_Strength, p.Team, \
                p.Overall_Pick, p.Draft_Class, s.Receiving_Yards, s.Receptions, s.Yards_Per_Reception, \
