@@ -217,6 +217,20 @@ def update_player():
    else: 
       return render_template("update.html")
 
+@app.route("/max", methods = ["POST", "GET"])
+def max():
+   con = engine.connect()
+   
+   player_list = session.get('player_list', [])
+   rows = con.execute(text("SELECT Conferences.Conference_Name, Player.Name, Player.Score \
+                           FROM Player \
+                           INNER JOIN Conferences ON Player.Conference = Conferences.Conference_Name \
+                           WHERE Player.Score = ( \
+                           SELECT MAX(Score) \
+                           FROM Player AS p \
+                           WHERE p.Conference = Player.Conference) ORDER BY Conferences.Conference_Name;")).fetchall()
+   con.close()
+   return render_template("max.html", rows = rows, player_list = player_list)
 
 
 #main
