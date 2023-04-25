@@ -25,6 +25,75 @@ app.secret_key = 'my_secret_key'
 @app.route("/")
 def list():
    con = engine.connect()
+
+   con.execute(text('UPDATE WR_Prospects.Advanced_Stats AS a \
+INNER JOIN (\
+    SELECT Name, College_Dominator_Rating, \
+           PERCENT_RANK() OVER (ORDER BY College_Dominator_Rating) AS DOM_Percentile \
+    FROM WR_Prospects.Advanced_Stats \
+    WHERE College_Dominator_Rating IS NOT NULL \
+) AS b ON a.Name = b.Name \
+SET a.DOM_Percentile = b.DOM_Percentile \
+WHERE a.College_Dominator_Rating IS NOT NULL; \
+ \
+UPDATE WR_Prospects.Advanced_Stats AS a  \
+INNER JOIN ( \
+    SELECT Name, College_Level_of_Competition, \
+           PERCENT_RANK() OVER (ORDER BY College_Level_of_Competition) AS LOC_Percentile \
+    FROM WR_Prospects.Advanced_Stats \
+    WHERE College_Level_of_Competition IS NOT NULL \
+) AS b ON a.Name = b.Name \
+SET a.LOC_Percentile = b.LOC_Percentile \
+WHERE a.College_Level_of_Competition IS NOT NULL; \
+ \
+UPDATE WR_Prospects.Advanced_Stats AS a \
+INNER JOIN ( \
+    SELECT Name, RAS_Score, \
+           PERCENT_RANK() OVER (ORDER BY RAS_Score) AS RAS_Percentile \
+    FROM WR_Prospects.Advanced_Stats \
+    WHERE RAS_Score > 0 \
+) AS b ON a.Name = b.Name \
+SET a.RAS_Percentile = b.RAS_Percentile \
+WHERE a.RAS_Score > 0;'))
+   con.execute(text('UPDATE WR_Prospects.Advanced_Stats AS a \
+INNER JOIN ( \
+    SELECT Name, Breakout_Age, \
+           1 - PERCENT_RANK() OVER (ORDER BY Breakout_Age) AS BA_Percentile \
+    FROM WR_Prospects.Advanced_Stats \
+    WHERE Breakout_Age IS NOT NULL \
+) AS b ON a.Name = b.Name \
+SET a.BA_Percentile = b.BA_Percentile \
+WHERE a.Breakout_Age IS NOT NULL; \
+'))   
+   con.execute(text('UPDATE WR_Prospects.Stats AS a \
+INNER JOIN ( \
+    SELECT Name, Receiving_Yards, \
+           PERCENT_RANK() OVER (ORDER BY Receiving_Yards) AS Yards_Percentile \
+    FROM WR_Prospects.Stats \
+) AS b ON a.Name = b.Name \
+SET a.Yards_Percentile = b.Yards_Percentile'))
+
+   con.execute(text('UPDATE WR_Prospects.Player p \
+JOIN ( \
+    SELECT p.Name,  \
+           SUM(s.Yards_Percentile + a.DOM_Percentile + (a.LOC_Percentile * 3) \
+               + (c.Conference_Strength * 1.5) + (s.Receiving_Touchdowns * 0.0132) + a.BA_Percentile \
+               + (CASE WHEN a.RAS_Score IS NULL THEN 0 ELSE a.RAS_Percentile * 2 END)) AS Score \
+    FROM WR_Prospects.Player p \
+    JOIN WR_Prospects.Stats s ON p.Name = s.Name \
+    JOIN WR_Prospects.Advanced_Stats a ON p.Name = a.Name \
+    JOIN WR_Prospects.Conferences c ON p.Conference = c.Conference_Name \
+    GROUP BY p.Name \
+) AS t ON p.Name = t.Name \
+SET p.Score = t.Score; \
+'))
+
+   con.commit()
+
+
+
+
+
    player_list = session.get('player_list', [])
    rows = con.execute(text("SELECT p.Name, p.Conference, c.Conference_Strength, p.Team, \
                p.Overall_Pick, p.Draft_Class, s.Receiving_Yards, s.Receptions, s.Yards_Per_Reception, \
@@ -44,21 +113,6 @@ def list():
 def add():
    con = engine.connect()
    if request.method == "POST":
-      '''
-      Name = request.form["Name"]
-      Conference = request.form["Conference"]
-      Team = request.form["Team"]
-      Overall_Pick = request.form["Overall_Pick"]
-      Draft_Class = request.form["Draft_Class"]
-      Receiving_Yards = request.form["Receiving_Yards"]
-      Receptions = request.form["Receptions"]
-      Yards_Per_Reception = request.form["Yards_Per_Reception"]
-      Receiving_Touchdowns = request.form["Receiving_Touchdowns"]
-      College_Dominator_Rating = request.form["College_Dominator_Rating"]
-      Breakout_Age = request.form["Breakout_Age"]
-      College_Level_of_Competition = request.form["College_Level_of_Competition"]
-      RAS_Score = request.form["RAS_Score"]
-      '''
         
       session['Name'] = request.form["Name"]
       session['Conference'] = request.form["Conference"]
@@ -98,56 +152,29 @@ def search():
 
    con = engine.connect()
    if request.method == "POST":
-      Name = request.form["Name"]
-      session['Name'] = Name
-      # session['Name'] = request.form['Name']
-      
-      '''
-      query = "SELECT * \
-            FROM Player \
-            LEFT JOIN Stats ON Player.Name = Stats.Name \
-            LEFT JOIN Advanced_Stats ON Player.Name = Advanced_Stats.Name \
-            LEFT JOIN Conferences ON Player.Conference = Conferences.Conference_Name \
-            WHERE Player.Name LIKE ':Name';"
-      '''
-      #thomas attempt without wildcard
+      session['Name'] = request.form['Name'] + '%'
+   
 
       player_list = session.get('player_list', [])
 
-      rows = con.execute(text("SELECT * \
-            FROM Player \
-            LEFT JOIN Stats ON Player.Name = Stats.Name \
-            LEFT JOIN Advanced_Stats ON Player.Name = Advanced_Stats.Name \
-            LEFT JOIN Conferences ON Player.Conference = Conferences.Conference_Name \
-            WHERE Player.Name = :Name")).fetchall()
-      '''
-      with engine.connect() as con:
-         results = con.execute(text(query), session).fetchall()
-         con.commit()
-      '''
+      rows = con.execute(text("SELECT p.Name, p.Conference, c.Conference_Strength, p.Team, \
+               p.Overall_Pick, p.Draft_Class, s.Receiving_Yards, s.Receptions, s.Yards_Per_Reception, \
+               s.Receiving_Touchdowns, a.College_Dominator_Rating, a.Breakout_Age, a.College_Level_of_Competition, \
+               a.RAS_Score, p.Score \
+               FROM WR_Prospects.Player p \
+               JOIN WR_Prospects.Stats s ON p.Name = s.Name \
+               JOIN WR_Prospects.Advanced_Stats a ON p.Name = a.Name \
+               JOIN WR_Prospects.Conferences c ON p.Conference = c.Conference_Name \
+            WHERE p.Name LIKE :Name"), session).fetchall()
+
+      #with engine.connect() as con:
+         #con.execute(text(rows), session).fetchall()
+         #con.commit()
+      
       con.close()
-      return render_template("/searchResults.html", Name=Name, rows = rows, player_list = player_list)
+      return render_template("/searchResults.html", rows = rows, player_list = player_list)
    else:
       return render_template('search.html')
-'''
-#displays a single player when he is searched for 
-@app.route("/display_single_player", methods = ["POST", "GET"])
-def display_single_player(Name):
-
-   rows = "SELECT * \
-            FROM Player \
-            LEFT JOIN Stats ON Player.Name = Stats.Name \
-            LEFT JOIN Advanced_Stats ON Player.Name = Advanced_Stats.Name \
-            LEFT JOIN Conferences ON Player.Conference = Conferences.Conference_Name \
-            WHERE Player.Name LIKE '%s';"
-
-
-   #with engine.connect() as con:
-    #    result = con.execute(rows, name=f"%{Name}%").fetchall()
-
-   return render_template("searchResults.html",rows=rows)
-
-'''
 
 @app.route("/delete", methods = ["POST", "GET"])
 def delete():
@@ -166,23 +193,29 @@ def delete():
    else:
       return render_template("delete.html")
 
-@app.route("/update_player", methods = ["POST", "GET"])
+@app.route("/update", methods = ["POST", "GET"])
 def update_player():
    con = engine.connect()
-   # Get the form data
-   Name = request.form['Name']
-   Draft_Class = request.form['Draft_Class']
-   Conference = request.form['Conference']
-   Team = request.form['Team']
-   Overall_Pick = request.form['Overall_Pick']
+   if request.method == "POST":
+      # Get the form data
+      session['Name'] = request.form['Name']
+      session['Draft_Class'] = request.form['Draft_Class']
+      session['Conference'] = request.form['Conference']
+      session['Team'] = request.form['Team']
+      session['Overall_Pick'] = request.form['Overall_Pick']
 
-   # Update the database
-   con.execute('UPDATE Player SET Draft_Class=?, Conference=?, Team=?, Overall_Pick=? WHERE Name =?',
-               (Draft_Class, Conference, Team, Overall_Pick, Name))
-  
-   con.close()
-   # Redirect back to the player page
-   return redirect(url_for('DisplayPlayers.html', Name = Name))
+
+      update_query = 'UPDATE Player SET Draft_Class=:Draft_Class, Conference=:Conference, \
+                  Team=:Team, Overall_Pick=:Overall_Pick WHERE Name =:Name'
+               
+      # Update the database
+      con.execute(text(update_query), session)
+      con.commit()
+      con.close()
+      # Redirect back to the player page
+      return redirect('/')
+   else: 
+      return render_template("update.html")
 
 
 
