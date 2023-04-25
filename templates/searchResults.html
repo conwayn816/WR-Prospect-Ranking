@@ -10,8 +10,6 @@
 	<h1>Search Results</h1>
 
 	<a href="/"><button>Go Home</button></a>
-
-	{% if results %}
 		<!--<p>Results found: {{ results|length }}</p>-->
 		<h1>Player List</h1>
 	<table>
@@ -52,8 +50,6 @@
 		</tr>
     {% endfor %}
   </table>
-	{% else %}
-		<p>No results found.</p>
-	{% endif %}
+
 </body>
 </html>

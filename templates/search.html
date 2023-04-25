@@ -9,15 +9,15 @@
         <a href="/"><button>Go Home</button></a>
         
         <form action="/search" method="POST">
-            <label for="Name">Player Name:</label>
-            <input type="text" name="Name" id="Name">
+            <h3>Player Name:</h3>
+            <input type="text" id="Name" name="Name">
             <input type="submit" value="Search">
         </form>
 
-    {% if player_found %}
+
     <p>Player was found!</p>
-	{% if results %}
-		<!--<p>Results found: {{ results|length }}</p>-->
+
+		
 		<h1>Player List</h1>
 	<table>
 		<tr>
@@ -57,16 +57,6 @@
 		</tr>
     {% endfor %}
   </table>
-    {% else %} <!--if player wasnt found code-->
-        {% if error %}
-            <p>{{ error }}</p>
-            {% set error = None %}
-            {% else %}
-            <p>Player wasn't found.</p>
-            <form action="{{ url_for('search') }}" method="GET">
-                <input type="submit" value="Search Again">
-            </form>
-        {% endif %}
-        
-    {% endif %}
-{% endif %}
+   
+</body>
+</html>

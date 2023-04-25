@@ -44,21 +44,6 @@ def list():
 def add():
    con = engine.connect()
    if request.method == "POST":
-      '''
-      Name = request.form["Name"]
-      Conference = request.form["Conference"]
-      Team = request.form["Team"]
-      Overall_Pick = request.form["Overall_Pick"]
-      Draft_Class = request.form["Draft_Class"]
-      Receiving_Yards = request.form["Receiving_Yards"]
-      Receptions = request.form["Receptions"]
-      Yards_Per_Reception = request.form["Yards_Per_Reception"]
-      Receiving_Touchdowns = request.form["Receiving_Touchdowns"]
-      College_Dominator_Rating = request.form["College_Dominator_Rating"]
-      Breakout_Age = request.form["Breakout_Age"]
-      College_Level_of_Competition = request.form["College_Level_of_Competition"]
-      RAS_Score = request.form["RAS_Score"]
-      '''
         
       session['Name'] = request.form["Name"]
       session['Conference'] = request.form["Conference"]
@@ -98,10 +83,9 @@ def search():
 
    con = engine.connect()
    if request.method == "POST":
-      Name = request.form["Name"]
-      session['Name'] = Name
-      # session['Name'] = request.form['Name']
+      session['Name'] = request.form['Name']
       
+
       '''
       query = "SELECT * \
             FROM Player \
@@ -119,14 +103,14 @@ def search():
             LEFT JOIN Stats ON Player.Name = Stats.Name \
             LEFT JOIN Advanced_Stats ON Player.Name = Advanced_Stats.Name \
             LEFT JOIN Conferences ON Player.Conference = Conferences.Conference_Name \
-            WHERE Player.Name = :Name")).fetchall()
-      '''
-      with engine.connect() as con:
-         results = con.execute(text(query), session).fetchall()
-         con.commit()
-      '''
+            WHERE Player.Name = :Name"), session).fetchall()
+
+      #with engine.connect() as con:
+         #con.execute(text(rows), session).fetchall()
+         #con.commit()
+      
       con.close()
-      return render_template("/searchResults.html", Name=Name, rows = rows, player_list = player_list)
+      return render_template("/searchResults.html", rows = rows, player_list = player_list)
    else:
       return render_template('search.html')
 '''
