@@ -24,7 +24,7 @@ app.secret_key = 'my_secret_key'
 #DisplayPlayers.html (displays the list of players)
 @app.route("/")
 def list():
-
+   con = engine.connect()
    player_list = session.get('player_list', [])
    rows = con.execute(text("SELECT p.Name, p.Conference, c.Conference_Strength, p.Team, \
                p.Overall_Pick, p.Draft_Class, s.Receiving_Yards, s.Receptions, s.Yards_Per_Reception, \
@@ -35,13 +35,14 @@ def list():
                JOIN WR_Prospects.Advanced_Stats a ON p.Name = a.Name \
                JOIN WR_Prospects.Conferences c ON p.Conference = c.Conference_Name \
                ORDER BY p.Name;")).fetchall()
-      
+   con.close() 
    return render_template("DisplayPlayers.html",rows=rows, player_list=player_list)
 
 
 #add a new player to the database
 @app.route("/Add_Stats", methods=["POST", "GET"])
 def add():
+   con = engine.connect()
    if request.method == "POST":
       '''
       Name = request.form["Name"]
@@ -83,12 +84,13 @@ def add():
          con.execute(text(stats_query), session)
          con.execute(text(advanced_query), session)
          con.commit()
-
-      return redirect("/")
    
+      con.close()
+      return redirect("/")
    else:
       return render_template("AddStats.html")
 
+   
       
 #search for a player in the database
 @app.route("/search", methods = ["POST", "GET"])
