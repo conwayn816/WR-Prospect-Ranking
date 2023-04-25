@@ -24,20 +24,19 @@ app.secret_key = 'my_secret_key'
 #DisplayPlayers.html (displays the list of players)
 @app.route("/")
 def list():
-    if 'players' in session:
-        rows = session['players']
-    else:
-        rows = con.execute(text("SELECT p.Name, p.Conference, c.Conference_Strength, p.Team, \
-                   p.Overall_Pick, p.Draft_Class, s.Receiving_Yards, s.Receptions, s.Yards_Per_Reception, \
-                   s.Receiving_Touchdowns, a.College_Dominator_Rating, a.Breakout_Age, a.College_Level_of_Competition, \
-                   a.RAS_Score, p.Score \
-                   FROM WR_Prospects.Player p \
-                   JOIN WR_Prospects.Stats s ON p.Name = s.Name \
-                   JOIN WR_Prospects.Advanced_Stats a ON p.Name = a.Name \
-                   JOIN WR_Prospects.Conferences c ON p.Conference = c.Conference_Name \
-                   ORDER BY p.Name;")).fetchall()
-        session['players'] = rows
-    return render_template("DisplayPlayers.html",rows=rows)
+
+   player_list = session.get('player_list', [])
+   rows = con.execute(text("SELECT p.Name, p.Conference, c.Conference_Strength, p.Team, \
+               p.Overall_Pick, p.Draft_Class, s.Receiving_Yards, s.Receptions, s.Yards_Per_Reception, \
+               s.Receiving_Touchdowns, a.College_Dominator_Rating, a.Breakout_Age, a.College_Level_of_Competition, \
+               a.RAS_Score, p.Score \
+               FROM WR_Prospects.Player p \
+               JOIN WR_Prospects.Stats s ON p.Name = s.Name \
+               JOIN WR_Prospects.Advanced_Stats a ON p.Name = a.Name \
+               JOIN WR_Prospects.Conferences c ON p.Conference = c.Conference_Name \
+               ORDER BY p.Name;")).fetchall()
+      
+   return render_template("DisplayPlayers.html",rows=rows, player_list=player_list)
 
 
 #add a new player to the database
@@ -83,8 +82,10 @@ def add():
          con.execute(text(player_query), session)
          con.execute(text(stats_query), session)
          con.execute(text(advanced_query), session)
+         con.commit()
 
-      return "Player added successfully!"
+      return redirect("/")
+   
    else:
       return render_template("AddStats.html")
 
