@@ -157,12 +157,15 @@ def search():
 
       player_list = session.get('player_list', [])
 
-      rows = con.execute(text("SELECT * \
-            FROM Player \
-            LEFT JOIN Stats ON Player.Name = Stats.Name \
-            LEFT JOIN Advanced_Stats ON Player.Name = Advanced_Stats.Name \
-            LEFT JOIN Conferences ON Player.Conference = Conferences.Conference_Name \
-            WHERE Player.Name LIKE :Name"), session).fetchall()
+      rows = con.execute(text("SELECT p.Name, p.Conference, c.Conference_Strength, p.Team, \
+               p.Overall_Pick, p.Draft_Class, s.Receiving_Yards, s.Receptions, s.Yards_Per_Reception, \
+               s.Receiving_Touchdowns, a.College_Dominator_Rating, a.Breakout_Age, a.College_Level_of_Competition, \
+               a.RAS_Score, p.Score \
+               FROM WR_Prospects.Player p \
+               JOIN WR_Prospects.Stats s ON p.Name = s.Name \
+               JOIN WR_Prospects.Advanced_Stats a ON p.Name = a.Name \
+               JOIN WR_Prospects.Conferences c ON p.Conference = c.Conference_Name \
+            WHERE p.Name LIKE :Name"), session).fetchall()
 
       #with engine.connect() as con:
          #con.execute(text(rows), session).fetchall()
