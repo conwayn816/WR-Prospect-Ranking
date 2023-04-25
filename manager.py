@@ -67,10 +67,13 @@ def add():
          RAS_Score = request.form["RAS_Score"]
          #RAS_Percentile = request.form["RAS_Percentile"]
 
-         player_query = "INSERT INTO Player(Name, Conference) VALUES(%s, %s)"
-         stats_query = "INSERT INTO Stats() VALUES()"
-
-         con.execute(player_query, Name, Conference)
+         player_query = "INSERT INTO Player(Name, Conference, Team, Overall_Pick, Draft_Class) VALUES(%s, %s, %s, %s, %s)"
+         stats_query = "INSERT INTO Stats(Name, Receiving_Yards, Receptions, Yards_Per_Reception, Receiving_Touchdowns) VALUES(%s, %s, %s, %s, %s)"
+         advanced_query = "INSERT INTO Stats(Name, College_Dominator_Rating, Breakout_Age, College_Level_of_Competition, RAS_Score) VALUES(%s, %s, %s, %s, %s)"
+         with engine.connect() as con:
+            con.execute(player_query, Name, Conference, Team, Overall_Pick, Draft_Class)
+            con.execute(stats_query, Name, Receiving_Yards, Receptions, Yards_Per_Reception, Receiving_Touchdowns)
+            con.execute(advanced_query, Name, College_Dominator_Rating, Breakout_Age, College_Level_of_Competition, RAS_Score)
 
          return "Player added successfully!"
    else:
