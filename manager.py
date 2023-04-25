@@ -42,15 +42,12 @@ def list():
 def add():
    if request.method == 'POST':
          #Conference
-         Conference_Name = request.form['Conference_Name']
-         Conference_Strength = request.form['Conference_Strength']
          #Player
          Name = request.form['Name']
          Conference = request.form["Conference"]
          Team = request.form["Team"]
          Overall_Pick = request.form["Overall_Pick"]
          Draft_Class = request.form['Draft_Class']
-         Score = request.form["Score"] #advanced function 
          #Stats
          Receiving_Yards = request.form["Receiving_Yards"]
          #Yards_Percentile = request.form["Yards_Percentile"]
@@ -69,7 +66,7 @@ def add():
 
          player_query = "INSERT INTO Player(Name, Conference, Team, Overall_Pick, Draft_Class) VALUES(%s, %s, %s, %s, %s)"
          stats_query = "INSERT INTO Stats(Name, Receiving_Yards, Receptions, Yards_Per_Reception, Receiving_Touchdowns) VALUES(%s, %s, %s, %s, %s)"
-         advanced_query = "INSERT INTO Stats(Name, College_Dominator_Rating, Breakout_Age, College_Level_of_Competition, RAS_Score) VALUES(%s, %s, %s, %s, %s)"
+         advanced_query = "INSERT INTO Advanced_Stats(Name, College_Dominator_Rating, Breakout_Age, College_Level_of_Competition, RAS_Score) VALUES(%s, %s, %s, %s, %s)"
          with engine.connect() as con:
             con.execute(player_query, Name, Conference, Team, Overall_Pick, Draft_Class)
             con.execute(stats_query, Name, Receiving_Yards, Receptions, Yards_Per_Reception, Receiving_Touchdowns)
