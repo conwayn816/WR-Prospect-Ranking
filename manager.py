@@ -83,7 +83,7 @@ def search():
 
    con = engine.connect()
    if request.method == "POST":
-      session['Name'] = request.form['Name']
+      session['Name'] = request.form['Name'] + '%'
       
 
       '''
@@ -103,7 +103,7 @@ def search():
             LEFT JOIN Stats ON Player.Name = Stats.Name \
             LEFT JOIN Advanced_Stats ON Player.Name = Advanced_Stats.Name \
             LEFT JOIN Conferences ON Player.Conference = Conferences.Conference_Name \
-            WHERE Player.Name = :Name"), session).fetchall()
+            WHERE Player.Name LIKE :Name"), session).fetchall()
 
       #with engine.connect() as con:
          #con.execute(text(rows), session).fetchall()
