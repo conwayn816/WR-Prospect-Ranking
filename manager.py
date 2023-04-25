@@ -83,45 +83,26 @@ def add():
 #search for a player in the database
 @app.route("/search", methods = ["POST", "GET"])
 def search():
+   if request.method == "POST":
+      Name = request.form["search_input"]
+      #player_data = display_single_player(Name) #get info about the player we just searched
 
-   Name = request.form['search_input']
-   player_data = display_single_player(Name) #get info about the player we just searched
-   
-   if player_data:
-      return render_template('search.html', player_found=True, Name = Name)
-   else:
-      return render_template('search.html')
-
-#displays a single player when he is searched for 
-@app.route("/display_single_player", methods = ["POST", "GET"])
-def display_single_player(Name):
-
-   query = "SELECT * \
+      #testing something here
+      rows = "SELECT * \
             FROM Player \
             LEFT JOIN Stats ON Player.Name = Stats.Name \
             LEFT JOIN Advanced_Stats ON Player.Name = Advanced_Stats.Name \
-            LEFT JOIN Conferences ON Player.College_Conference = Conferences.Conference_Name \
+            LEFT JOIN Conferences ON Player.Conference = Conferences.Conference_Name \
             WHERE Player.Name LIKE '%s';"
    
-   Name = ("%" + Name + "%")
+      
+      return render_template('search.html', player_found=True, Name = Name, rows = rows)
 
-   cur.execute(query, Name)
-   result = cur.fetchone()
-   return result
+   else:
+      return render_template('search.html')
 
-@app.route('/name_check', methods=['POST'])
-def name_check():
-    # retrieve the player name from the search form
-    player_name = request.form['player_name']
-    
-    # check if the player exists in the database
-    cur.execute("SELECT * FROM Player WHERE Name = %s", (player_name,))
-    player = cur.fetchone()
-    if not player:
-        return render_template('search.html', message='Player not found.')
-    
-    # pass the player's data to the update form
-    return redirect('/update_player/{}'.format(player['Name']))
+
+
 
 @app.route("/delete", methods = ["POST", "GET"])
 def delete():

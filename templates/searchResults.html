@@ -9,26 +9,49 @@
 <body>
 	<h1>Search Results</h1>
 
-	<a href="DisplayPlayers.html"><button>Go Home</button></a>
+	<a href="/"><button>Go Home</button></a>
 
 	{% if results %}
-		<p>Results found: {{ results|length }}</p>
-		<table>
-			<thead>
-				<tr>
-					<th>Name</th>
-					
-				</tr>
-			</thead>
-			<tbody>
-				{% for result in results %}
-					<tr>
-						<td>{{ result[0] }}</td>
-						<td>{{ result[1] }}</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+		<!--<p>Results found: {{ results|length }}</p>-->
+		<h1>Player List</h1>
+	<table>
+		<tr>
+		<th>Name</th>
+		<th>Conference</th>
+		<th>Conference Strength</th>
+		<th>College Team</th>
+		<th>Overall Pick</th>
+		<th>Draft Class</th>
+		<th>Receiving Yards</th>
+		<th>Receptions</th>
+		<th>Yards per Reception</th>
+		<th>Receiving Touchdowns</th>
+		<th>College Dominator Rating</th>
+		<th>Breakout Age</th>
+		<th>College Level of Competition</th>
+		<th>RAS Score</th>
+		<th>Predicted Score</th>
+		</tr>
+		{% for player in rows %}
+		<tr>
+		<td>{{ player[0] }}</td>
+		<td>{{ player[1] }}</td>
+		<td>{{ player[2] }}</td>
+		<td>{{ player[3] }}</td>
+		<td>{{ player[4] }}</td>
+		<td>{{ player[5] }}</td>
+		<td>{{ player[6] }}</td>
+		<td>{{ player[7] }}</td>
+		<td>{{ player[8] }}</td>
+		<td>{{ player[9] }}</td>
+		<td>{{ player[10] }}</td>
+		<td>{{ player[11] }}</td>
+		<td>{{ player[12] }}</td>
+		<td>{{ player[13] }}</td>
+		<td>{{ player[14] }}</td>
+		</tr>
+    {% endfor %}
+  </table>
 	{% else %}
 		<p>No results found.</p>
 	{% endif %}
