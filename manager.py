@@ -127,7 +127,7 @@ def delete():
 
    query = "DELETE FROM Player WHERE Name LIKE %s"
    params = params = ("%" + delete_search + "%",)  
-   cur.execute(query, params)
+   con.execute(query, params)
 
    return render_template("DisplayPlayers.html")
 
@@ -142,7 +142,7 @@ def update_player():
    Overall_Pick = request.form['Overall_Pick']
 
    # Update the database
-   cur.execute('UPDATE Player SET Draft_Class=?, Conference=?, Team=?, Overall_Pick=? WHERE Name =?',
+   con.execute('UPDATE Player SET Draft_Class=?, Conference=?, Team=?, Overall_Pick=? WHERE Name =?',
                (Draft_Class, Conference, Team, Overall_Pick, Name))
   
 
