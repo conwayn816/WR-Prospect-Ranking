@@ -70,7 +70,7 @@ def add():
          player_query = "INSERT INTO Player(Name, Conference) VALUES(%s, %s)"
          stats_query = "INSERT INTO Stats() VALUES()"
 
-         cur.execute(player_query, Name, Conference)
+         con.execute(player_query, Name, Conference)
 
          return "Player added successfully!"
    else:
