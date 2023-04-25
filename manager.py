@@ -64,13 +64,16 @@ def add():
          RAS_Score = request.form["RAS_Score"]
          #RAS_Percentile = request.form["RAS_Percentile"]
 
-         player_query = "INSERT INTO Player(Name, Conference, Team, Overall_Pick, Draft_Class) VALUES(%s, %s, %s, %s, %s)"
-         stats_query = "INSERT INTO Stats(Name, Receiving_Yards, Receptions, Yards_Per_Reception, Receiving_Touchdowns) VALUES(%s, %s, %s, %s, %s)"
-         advanced_query = "INSERT INTO Advanced_Stats(Name, College_Dominator_Rating, Breakout_Age, College_Level_of_Competition, RAS_Score) VALUES(%s, %s, %s, %s, %s)"
+         player_query = "INSERT INTO Player(Name, Conference, Team, Overall_Pick, Draft_Class) VALUES(:Name, :Conference, :Team, :Overall_Pick, :Draft_Class)"
+         stats_query = "INSERT INTO Stats(Name, Receiving_Yards, Receptions, Yards_Per_Reception, Receiving_Touchdowns) VALUES(:Name, :Receiving_Yards, :Receptions, :Yards_Per_Reception, :Receiving_Touchdowns)"
+         advanced_query = "INSERT INTO Advanced_Stats(Name, College_Dominator_Rating, Breakout_Age, College_Level_of_Competition, RAS_Score) VALUES(:Name, :College_Dominator_Rating, :Breakout_Age, :College_Level_of_Competition, :RAS_Score)"
+
+
          with engine.connect() as con:
-            con.execute(player_query, Name, Conference, Team, Overall_Pick, Draft_Class)
-            con.execute(stats_query, Name, Receiving_Yards, Receptions, Yards_Per_Reception, Receiving_Touchdowns)
-            con.execute(advanced_query, Name, College_Dominator_Rating, Breakout_Age, College_Level_of_Competition, RAS_Score)
+            con.execute(text(player_query), {"Name": Name, "Conference": Conference, "Team": Team, "Overall_Pick": Overall_Pick, "Draft_Class": Draft_Class})
+            con.execute(text(stats_query), {"Name": Name, "Receiving_Yards": Receiving_Yards, "Receptions": Receptions, "Yards_Per_Reception": Yards_Per_Reception, "Receiving_Touchdowns": Receiving_Touchdowns})
+            con.execute(text(advanced_query), {"Name": Name, "College_Dominator_Rating": College_Dominator_Rating, "Breakout_Age": Breakout_Age, "College_Level_of_Competition": College_Level_of_Competition, "RAS_Score": RAS_Score})
+
 
          return "Player added successfully!"
    else:
