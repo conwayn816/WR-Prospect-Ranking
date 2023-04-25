@@ -183,10 +183,17 @@ def delete():
    if request.method == "POST":
       session['Name'] = request.form["Name"]
 
-      query = "DELETE FROM Player WHERE Name = :Name"
+      query = "DELETE FROM WR_Prospects.Player WHERE Name = :Name"
+      query2 = "DELETE FROM WR_Prospects.Advanced_Stats WHERE Name = :Name"
+      query3 = "DELETE FROM WR_Prospects.Stats WHERE Name = :Name"
+     
        
       with engine.connect() as con:
          con.execute(text(query),session)
+         con.commit()
+         con.execute(text(query2),session)
+         con.commit()
+         con.execute(text(query3),session)
          con.commit()
       con.close()
       return redirect("/")
