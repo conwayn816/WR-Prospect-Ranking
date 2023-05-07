@@ -1,15 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, session
-import _mysql_connector as myconn
-import mysql 
-from flask import Flask, render_template, request
-from flask_mysqldb import MySQL
-#from wtforms import Form, StringField
-import mysql.connector
-from mysql.connector import errorcode
+from flask import Flask, render_template, request, redirect, session
+# from wtforms import Form, StringField
 from sqlalchemy import create_engine
 from sqlalchemy import text
-
-from sqlalchemy.orm import sessionmaker
 # create a connection to the MySQL database
 app = Flask(__name__)
 user = 'root'
@@ -21,7 +13,7 @@ engine = create_engine(f'mysql://{user}:{password}@{host}:{port}/{database}')
 # test the connection
 con = engine.connect()
 app.secret_key = 'my_secret_key'
-#DisplayPlayers.html (displays the list of players)
+# DisplayPlayers.html (displays the list of players)
 @app.route("/")
 def list():
    con = engine.connect()
@@ -90,10 +82,6 @@ SET p.Score = t.Score; \
 
    con.commit()
 
-
-
-
-
    player_list = session.get('player_list', [])
    rows = con.execute(text("SELECT p.Name, p.Conference, c.Conference_Strength, p.Team, \
                p.Overall_Pick, p.Draft_Class, s.Receiving_Yards, s.Receptions, s.Yards_Per_Reception, \
@@ -108,7 +96,7 @@ SET p.Score = t.Score; \
    return render_template("DisplayPlayers.html",rows=rows, player_list=player_list)
 
 
-#add a new player to the database
+# add a new player to the database
 @app.route("/Add_Stats", methods=["POST", "GET"])
 def add():
    con = engine.connect()
@@ -143,10 +131,8 @@ def add():
       return redirect("/")
    else:
       return render_template("AddStats.html")
-
-   
-      
-#search for a player in the database
+    
+# search for a player in the database
 @app.route("/search", methods = ["POST", "GET"])
 def search():
 
@@ -166,10 +152,6 @@ def search():
                JOIN WR_Prospects.Advanced_Stats a ON p.Name = a.Name \
                JOIN WR_Prospects.Conferences c ON p.Conference = c.Conference_Name \
             WHERE p.Name LIKE :Name"), session).fetchall()
-
-      #with engine.connect() as con:
-         #con.execute(text(rows), session).fetchall()
-         #con.commit()
       
       con.close()
       return render_template("/searchResults.html", rows = rows, player_list = player_list)
@@ -189,11 +171,11 @@ def delete():
      
        
       with engine.connect() as con:
-         con.execute(text(query),session)
+         con.execute(text(query), session)
          con.commit()
-         con.execute(text(query2),session)
+         con.execute(text(query2), session)
          con.commit()
-         con.execute(text(query3),session)
+         con.execute(text(query3), session)
          con.commit()
       con.close()
       return redirect("/")
