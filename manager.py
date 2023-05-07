@@ -1,11 +1,10 @@
 from flask import Flask, render_template, request, redirect, session
-# from wtforms import Form, StringField
 from sqlalchemy import create_engine
 from sqlalchemy import text
 # create a connection to the MySQL database
 app = Flask(__name__)
 user = 'root'
-password = 'Ap080602'
+password = 'password'
 host = 'localhost'
 port = '3306'
 database = 'WR_Prospects'
