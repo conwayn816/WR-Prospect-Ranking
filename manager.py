@@ -12,7 +12,6 @@ database = "WR_Prospects"
 engine = create_engine(f"mysql://{user}:{password}@{host}:{port}/{database}")
 # test the connection
 con = engine.connect()
-app.secret_key = "my_secret_key"
 
 
 # DisplayPlayers.html (displays the list of players)
