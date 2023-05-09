@@ -8,11 +8,16 @@ The application uses Python and Flask to interface with the database and the fro
 # Functions
 
 LISTING - The application has a home page that displays all forward facing data for each player.
+
 SEARCH - The application allows for the searching of players by name.
+
 ADD - The application allows the user to input their own players. The application will calculate their score/recalculate existing
 players score based on ranking.
+
 DELETE - The application allows the user to delete players from the records.
+
 UPDATE - The application allows the user to update player records.
+
 TOP SCORE - The application will list the top scored player from each Power 5 Conference.
 
 
