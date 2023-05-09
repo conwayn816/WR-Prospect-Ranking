@@ -8,4 +8,4 @@ The application uses Python and Flask to interface with the database and the fro
 # A Glimpse into the Application
 
 Here is a sampling of the application with a database loaded with all WR in the 2021 and 2022 draft class.
-[!alt text](WR-Prospect-Ranking/images/Screenshot 2023-05-08 at 11.34.12 PM.png)
+[!alt text]("WR-Prospect-Ranking/images/Screenshot 2023-05-08 at 11.34.12 PM.png")
