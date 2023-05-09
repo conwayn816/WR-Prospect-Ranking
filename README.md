@@ -5,6 +5,17 @@ in the NFL or are planning on it. The aim is to grade player performance in coll
 the "Database Creation" folder. The "templates" folder contains all of the HTML templates for the front end of the application.
 The application uses Python and Flask to interface with the database and the front end.
 
+# Functions
+
+LISTING - The application has a home page that displays all forward facing data for each player.
+SEARCH - The application allows for the searching of players by name.
+ADD - The application allows the user to input their own players. The application will calculate their score/recalculate existing
+players score based on ranking.
+DELETE - The application allows the user to delete players from the records.
+UPDATE - The application allows the user to update player records.
+TOP SCORE - The application will list the top scored player from each Power 5 Conference.
+
+
 # A Glimpse into the Application
 
 Here is a sampling of the application with a database loaded with all WR in the 2021 and 2022 draft class:
