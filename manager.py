@@ -10,6 +10,7 @@ host = "localhost"
 port = "3306"
 database = "WR_Prospects"
 engine = create_engine(f"mysql://{user}:{password}@{host}:{port}/{database}")
+app.secret_key = 'my_secret_key'
 # test the connection
 con = engine.connect()
 
